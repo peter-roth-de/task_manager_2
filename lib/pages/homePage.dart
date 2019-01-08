@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:task_manager_2/auth/sapCopinAccount.dart';
 import 'package:task_manager_2/data/copinTaskController.dart';
 import 'package:task_manager_2/widgets/taskTile.dart';
+import 'package:task_manager_2/widgets/taskDetail.dart';
 import 'package:task_manager_2/models/taskList.dart';
 import 'package:task_manager_2/util/utils.dart';
 
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   int _counter = 0;
   TaskList _taskList = null;
   List<Widget> taskTiles = <Widget>[];
-  bool hasLoaded = true;
+  bool hasLoaded = false;
 
   final PublishSubject account = PublishSubject<SAPCopinAccount>();
   //final PublishSubject account2 = PublishSubject<String>();
@@ -129,14 +130,42 @@ class _HomePageState extends State<HomePage> {
         ),
       ),*/
 
-
+      body: Center(
+        child: hasLoaded ? ListView.builder(
+          itemCount: _taskList.count,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(_taskList.tasks[index].subject),
+              subtitle: new Text(_taskList.tasks[index].description!=null ? _taskList.tasks[index].description.substring(1,30) : ""),
+              leading: new Icon(
+                Icons.check_circle,
+                color: Colors.blue[500],
+              ),
+              // When a user taps on the ListTile, navigate to the DetailScreen.
+              // Notice that we're not only creating a DetailScreen, we're
+              // also passing the current todo through to it!
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TaskDetail(task: _taskList.tasks[index]),
+                  ),
+                );
+              },
+            );
+          },
+        ) : CircularProgressIndicator(),
+      ),
+/*
       body: Center(
           child: hasLoaded ? ListView(
             shrinkWrap: true,
             padding: const EdgeInsets.all(20.0),
-            children: taskTiles
+            children: taskTiles,
+
           ) : CircularProgressIndicator(),
       ),
+      */
 //      floatingActionButton: new FloatingActionButton(
 //        //onPressed: _incrementCounter,
 //        tooltip: 'Increment',

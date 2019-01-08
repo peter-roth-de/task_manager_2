@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager_2/models/task.dart';
 import 'package:task_manager_2/models/taskList.dart';
 import 'package:task_manager_2/util/utils.dart';
+import 'package:task_manager_2/widgets/taskDetail.dart';
 
 class TaskTile extends ListTile {
   Task _task;
@@ -14,7 +15,10 @@ class TaskTile extends ListTile {
         Icons.check_circle,
         color: Colors.blue[500],
       ),
-  ) {
+      onTap: () {}
+
+  )
+  {
     _task = task;
   }
 }
