@@ -23,7 +23,7 @@ class TaskDetail extends StatelessWidget {
             children: <Widget>[
               new Row(
                 children: <Widget>[
-                  new Hero(child: new Image.network(_url, height: 150.0, width: 100.0,), tag: task.getTaskId()),
+                  //new Hero(child: new Image.network(_url, height: 150.0, width: 100.0,), tag: task.getTaskId()),
                   new Expanded(
                     child: new Padding(
                       padding: const EdgeInsets.only(top : 8.0, left: 24.0),

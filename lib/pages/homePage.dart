@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   TaskList _taskList = null;
   List<Widget> taskTiles = <Widget>[];
   bool hasLoaded = false;
+  CopinTaskController _taskCtrl;
 
   final PublishSubject account = PublishSubject<SAPCopinAccount>();
   //final PublishSubject account2 = PublishSubject<String>();
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     future.then((_) {
       //account.add("login successful");
       //subject.add("abc");
+      _taskCtrl = new CopinTaskController();
       account.add(SAPCopinAccount());
     });
 
@@ -69,10 +71,10 @@ class _HomePageState extends State<HomePage> {
 
   _readTasks(account) {
   //_readTasks(String s) {
-    CopinTaskController taskCtrl = new CopinTaskController();
+    ////CopinTaskController taskCtrl = new CopinTaskController();
     setState(() => hasLoaded = false);
     // read COPIN tasks
-    Future<TaskList> f_taskList = taskCtrl.getTaskList(SAPCopinAccount().getToken());
+    Future<TaskList> f_taskList = _taskCtrl.getTaskList(SAPCopinAccount().getToken());
 
     // once the tasks are read process them.
     f_taskList
@@ -111,25 +113,15 @@ class _HomePageState extends State<HomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text("Task Manager 2"),
+        actions: <Widget>[ FloatingActionButton(
+          onPressed: ()  {
+              _taskCtrl.createTask(SAPCopinAccount().getToken());
+              _readTasks(account);
+          },
+          tooltip: 'Add a new task!',
+          child: Icon(Icons.add),
+          )],
       ),
-
-      /*body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          children: <Widget>[
-            hasLoaded ? Container() : CircularProgressIndicator(),
-            Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.all(10.0),
-                  itemCount: taskTiles.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return taskTiles[index];//new MovieView(movies[index], db);
-                  },
-                ))
-          ],
-        ),
-      ),*/
-
       body: Center(
         child: hasLoaded ? ListView.builder(
           itemCount: _taskList.count,

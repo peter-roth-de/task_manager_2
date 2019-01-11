@@ -5,6 +5,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:io'; // http const
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 // task_manager_2
 import 'package:task_manager_2/models/task.dart';
@@ -41,7 +42,13 @@ class CopinTaskController {
 
   String getTaskMetadataUrl(String format) {
     return SapCopinStaging.TASK_SRV
-       + ODATA.PARAM_METADATA;
+        + SapCopinStaging.TASK_SRV_POSTFIX
+        + ODATA.PARAM_METADATA;
+  }
+
+  String getCreateTaskUrl() {
+    return SapCopinStaging.TASK_SRV
+        + SapCopinStaging.TASK_SRV_POSTFIX;
   }
 
   //Future<List<Task>> getTasks(AuthToken token) async {
@@ -148,6 +155,35 @@ class CopinTaskController {
       Utils.logC("readTasks() failed " + response.statusCode.toString());
     }
     return taskList;
+  }
+
+  Future<void> createTask(AuthToken token) async {
+
+    var url = getCreateTaskUrl();
+    var body;
+
+    DateFormat df = new DateFormat("de_DE");
+    String addDate = df.add_yMd().add_jm().format(new DateTime.now());
+
+    body = json.encode({"ProjectUuid": "1ad693c2-78e6-46f8-a59f-2948bd41aa68","Subject": "subject: created through task app at $addDate"});
+    Map<String, String> headers = {
+      'Content-type' : 'application/json',
+      'Accept': 'application/json',
+      HttpHeaders.authorizationHeader : token.token_type + " " + token.access_token,
+    };
+
+    final response = await http.post(url, body: body, headers: headers);
+    final responseJson = json.decode(response.body);
+    Utils.logC(responseJson.toString());
+//    return response;
+//
+//    final http.Response response = await http.post(
+//      getCreateTaskUrl()(),
+//      headers: {
+//        HttpHeaders.authorizationHeader: token.token_type + " " + token.access_token,
+//        HttpHeaders.contentTypeHeader: "application/json"
+//      },
+//    );
   }
 
   Task _parseTask(jsonTask) {

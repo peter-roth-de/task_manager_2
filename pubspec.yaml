@@ -25,6 +25,7 @@ dependencies:
   path_provider:
   scoped_model: ^1.0.1
   rxdart: ^0.20.0
+  intl: ^0.15.7 # date formater (international package)
 
 
 dev_dependencies:
